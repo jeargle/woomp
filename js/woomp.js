@@ -22,8 +22,8 @@ loadState = {
                                  fill: '#ffffff'});
         
         // Load images
-        game.load.image('player', 'assets/square-red.png');
-        game.load.image('enemy', 'assets/square-blue.png');
+        game.load.image('player', 'assets/circle-red.png');
+        game.load.image('enemy', 'assets/circle-blue.png');
         game.load.image('platform', 'assets/square-green.png');
 
         // Load sound effects
@@ -85,13 +85,24 @@ playState = {
         block.scale.setTo(1, 17);
         block.body.immovable = true;
 
+        block = this.walls.create(200, 200, 'platform');
+        block.scale.setTo(8, 1);
+        block.body.immovable = true;
+
+        block = this.walls.create(400, 400, 'platform');
+        block.scale.setTo(8, 1);
+        block.body.immovable = true;
+
         // Player
-        this.player = game.add.sprite(32, game.world.height - 150, 'player');
+        this.player = game.add.sprite(150, game.world.height - 150, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         this.playerSpeed = 300;
-        this.jumpSpeed = 600;
 
         game.physics.arcade.enable(this.player);
+
+        // Woomp
+        this.woompTime = 0;
+        this.woompTimeOffset = 300;
 
         // Controls
         this.cursors = game.input.keyboard.addKeys({
@@ -99,7 +110,7 @@ playState = {
             'down': Phaser.Keyboard.S,
             'left': Phaser.Keyboard.A,
             'right': Phaser.Keyboard.D,
-            'woomp': Phaser.Keyboard.SHIFT
+            'woomp': Phaser.Keyboard.SPACEBAR
         });
 
     },
@@ -108,13 +119,22 @@ playState = {
 
         game.physics.arcade.collide(this.player, this.walls);
         game.physics.arcade.collide(this.enemies, this.walls);
+        game.physics.arcade.overlap(this.player, this.enemies,
+                                    this.end, null, this);
         
         this.player.body.velocity.x = 0;
+        this.player.body.velocity.y = 0;
         if (this.cursors.right.isDown) {
             this.player.body.velocity.x = this.playerSpeed;
         }
         else if (this.cursors.left.isDown) {
             this.player.body.velocity.x = -this.playerSpeed;
+        }
+        else if (this.cursors.up.isDown) {
+            this.player.body.velocity.y = -this.playerSpeed;
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.body.velocity.y = this.playerSpeed;
         }
 
         if (this.cursors.woomp.isDown) {
@@ -123,6 +143,18 @@ playState = {
     },
     woomp: function() {
         'use strict';
+
+        if (game.time.now > this.woompTime) {
+            console.log('woomp');
+            this.woompTime = game.time.now + this.woompTimeOffset;
+        }
+    },
+    die: function(player, enemy) {
+        'use strict';
+
+        console.log('die');
+        
+        this.end();
     },
     end: function() {
         'use strict';
