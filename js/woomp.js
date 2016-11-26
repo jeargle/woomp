@@ -22,8 +22,8 @@ loadState = {
                                  fill: '#ffffff'});
         
         // Load images
-        game.load.image('player', 'assets/circle-red.png');
-        game.load.image('enemy', 'assets/circle-blue.png');
+        game.load.image('player', 'assets/circle-blue.png');
+        game.load.image('enemy', 'assets/circle-red.png');
         game.load.image('platform', 'assets/square-green.png');
 
         // Load sound effects
@@ -100,6 +100,17 @@ playState = {
 
         game.physics.arcade.enable(this.player);
 
+        // Enemies
+        this.enemies = game.add.group();
+        this.enemies.enableBody = true;
+        this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        // this.enemies.createMultiple(30, 'enemy');
+        this.enemies.setAll('outOfBoundsKill', true);
+        this.enemies.setAll('checkWorldBounds', true);
+        this.createEnemies();
+        this.enemiesKilled = 0;
+        this.enemySpeed = 200;
+        
         // Woomp
         this.woompTime = 0;
         this.woompTimeOffset = 300;
@@ -148,6 +159,22 @@ playState = {
             console.log('woomp');
             this.woompTime = game.time.now + this.woompTimeOffset;
         }
+    },
+    createEnemies: function() {
+        'use strict';
+        var enemy;
+
+        enemy = this.enemies.create(50, 50, 'enemy');
+        enemy.anchor.setTo(0.5, 0.5);
+
+        enemy = this.enemies.create(150, 100, 'enemy');
+        enemy.anchor.setTo(0.5, 0.5);
+
+        enemy = this.enemies.create(250, 50, 'enemy');
+        enemy.anchor.setTo(0.5, 0.5);
+
+        enemy = this.enemies.create(350, 100, 'enemy');
+        enemy.anchor.setTo(0.5, 0.5);
     },
     die: function(player, enemy) {
         'use strict';
