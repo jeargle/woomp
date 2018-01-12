@@ -20,7 +20,7 @@ loadState = {
         loadLbl = game.add.text(80, 160, 'loading...',
                                 {font: '30px Courier',
                                  fill: '#ffffff'});
-        
+
         // Load images
         game.load.image('player', 'assets/circle-blue.png');
         game.load.image('enemy', 'assets/circle-red.png');
@@ -80,7 +80,7 @@ playState = {
         block = this.walls.create(0, 32, 'platform');
         block.scale.setTo(1, 17);
         block.body.immovable = true;
-        
+
         block = this.walls.create(game.world.width - 32, 32, 'platform');
         block.scale.setTo(1, 17);
         block.body.immovable = true;
@@ -104,13 +104,12 @@ playState = {
         this.enemies = game.add.group();
         this.enemies.enableBody = true;
         this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        // this.enemies.createMultiple(30, 'enemy');
         this.enemies.setAll('outOfBoundsKill', true);
         this.enemies.setAll('checkWorldBounds', true);
-        this.createEnemies();
         this.enemiesKilled = 0;
-        this.enemySpeed = 200;
-        
+        this.enemySpeed = 100;
+        this.createEnemies();
+
         // Woomp
         this.woompTime = 0;
         this.woompTimeOffset = 300;
@@ -130,9 +129,10 @@ playState = {
 
         game.physics.arcade.collide(this.player, this.walls);
         game.physics.arcade.collide(this.enemies, this.walls);
+        game.physics.arcade.collide(this.enemies, this.enemies);
         game.physics.arcade.overlap(this.player, this.enemies,
                                     this.end, null, this);
-        
+
         this.player.body.velocity.x = 0;
         this.player.body.velocity.y = 0;
         if (this.cursors.right.isDown) {
@@ -162,25 +162,28 @@ playState = {
     },
     createEnemies: function() {
         'use strict';
-        var enemy;
+        var i, positions, pos, enemy;
 
-        enemy = this.enemies.create(50, 50, 'enemy');
-        enemy.anchor.setTo(0.5, 0.5);
+        console.log('createEnemies()');
 
-        enemy = this.enemies.create(150, 100, 'enemy');
-        enemy.anchor.setTo(0.5, 0.5);
-
-        enemy = this.enemies.create(250, 50, 'enemy');
-        enemy.anchor.setTo(0.5, 0.5);
-
-        enemy = this.enemies.create(350, 100, 'enemy');
-        enemy.anchor.setTo(0.5, 0.5);
+        positions = [
+            [50, 50],
+            [150, 100],
+            [250, 50],
+            [350, 100]
+        ];
+        for (i=0; i<positions.length; i++) {
+            pos = positions[i];
+            enemy = this.enemies.create(pos[0], pos[1], 'enemy');
+            enemy.anchor.setTo(0.5, 0.5);
+            enemy.body.velocity.x = this.enemySpeed;
+        }
     },
     die: function(player, enemy) {
         'use strict';
 
         console.log('die');
-        
+
         this.end();
     },
     end: function() {
