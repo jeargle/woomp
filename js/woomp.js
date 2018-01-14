@@ -107,7 +107,7 @@ playState = {
         this.enemies.setAll('outOfBoundsKill', true);
         this.enemies.setAll('checkWorldBounds', true);
         this.enemiesKilled = 0;
-        this.enemySpeed = 100;
+        this.enemySpeed = 80;
         this.createEnemies();
 
         // Woomp
@@ -158,9 +158,11 @@ playState = {
         // Also could use this.enemies.children (array of objects).
         that = this;
         this.enemies.forEach(function(enemy) {
-            if (Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
-                Math.abs(enemy.body.velocity.y) < that.enemySpeed) {
-                // console.log('setting velocity');
+            if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
+                 Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
+                game.time.now > enemy.moveTime) {
+                enemy.body.velocity.x = 0;
+                enemy.body.velocity.y = 0;
                 switch(game.rnd.integerInRange(0, 3)) {
                 case 0:
                     enemy.body.velocity.x = that.enemySpeed;
@@ -175,6 +177,7 @@ playState = {
                     enemy.body.velocity.y = -that.enemySpeed;
                     break;
                 }
+                enemy.moveTime = game.time.now + game.rnd.integerInRange(5, 10)*200;
             }
         })
 
