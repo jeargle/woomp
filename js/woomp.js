@@ -126,6 +126,7 @@ playState = {
     },
     update: function() {
         'use strict';
+        var enemy, that;
 
         game.physics.arcade.collide(this.player, this.walls);
         game.physics.arcade.collide(this.enemies, this.walls);
@@ -133,6 +134,7 @@ playState = {
         game.physics.arcade.overlap(this.player, this.enemies,
                                     this.end, null, this);
 
+        // Update player.
         this.player.body.velocity.x = 0;
         this.player.body.velocity.y = 0;
         if (this.cursors.right.isDown) {
@@ -151,6 +153,31 @@ playState = {
         if (this.cursors.woomp.isDown) {
             this.woomp();
         }
+
+        // Update enemies.
+        // Also could use this.enemies.children (array of objects).
+        that = this;
+        this.enemies.forEach(function(enemy) {
+            if (Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
+                Math.abs(enemy.body.velocity.y) < that.enemySpeed) {
+                // console.log('setting velocity');
+                switch(game.rnd.integerInRange(0, 3)) {
+                case 0:
+                    enemy.body.velocity.x = that.enemySpeed;
+                    break;
+                case 1:
+                    enemy.body.velocity.y = that.enemySpeed;
+                    break;
+                case 2:
+                    enemy.body.velocity.x = -that.enemySpeed;
+                    break;
+                case 3:
+                    enemy.body.velocity.y = -that.enemySpeed;
+                    break;
+                }
+            }
+        })
+
     },
     woomp: function() {
         'use strict';
@@ -176,7 +203,6 @@ playState = {
             pos = positions[i];
             enemy = this.enemies.create(pos[0], pos[1], 'enemy');
             enemy.anchor.setTo(0.5, 0.5);
-            enemy.body.velocity.x = this.enemySpeed;
         }
     },
     die: function(player, enemy) {
