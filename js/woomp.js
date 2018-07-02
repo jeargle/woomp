@@ -1,111 +1,162 @@
-var score, bootState, loadState, titleState, playState, endState, game;
+var score, bootScene, loadScene, titleScene, playScene, endScene, game;
 
 score = 0;
 
-bootState = {
+bootScene = {
+    key: 'boot',
+    active: true,
+    init: (config) => {
+        console.log('[BOOT] init', config);
+    },
+    preload: () => {
+        console.log('[BOOT] preload');
+    },
     create: function() {
         'use strict';
 
-        // Load physics engine
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.state.start('load');
+        game.scene.start('load');
+        game.scene.remove('boot');
+    },
+    update: () => {
+        console.log('[BOOT] update');
     }
 };
 
-loadState = {
+loadScene = {
+    key: 'load',
+    renderToTexture: true,
+    x: 64,
+    y: 64,
+    width: 320,
+    height: 200,
+    init: (config) => {
+        console.log('[LOAD] init', config);
+    },
     preload: function() {
         'use strict';
         var loadLbl;
 
-        loadLbl = game.add.text(80, 160, 'loading...',
+        loadLbl = this.add.text(80, 160, 'loading...',
                                 {font: '30px Courier',
                                  fill: '#ffffff'});
 
         // Load images
-        game.load.image('player', 'assets/circle-blue.png');
-        game.load.image('enemy', 'assets/circle-red.png');
-        game.load.image('platform', 'assets/square-green.png');
+        this.load.image('player', 'assets/circle-blue.png');
+        this.load.image('enemy', 'assets/circle-red.png');
+        this.load.image('platform', 'assets/square-green.png');
 
         // Load sound effects
     },
     create: function() {
         'use strict';
-        game.state.start('title');
+        game.scene.start('title');
+        game.scene.remove('load');
+    },
+    update: () => {
+        console.log('[LOAD] update');
     }
 };
 
-titleState = {
+titleScene = {
+    key: 'title',
+    init: (config) => {
+        console.log('[TITLE] init', config);
+    },
+    preload: () => {
+        console.log('[TITLE] preload');
+    },
     create: function() {
         'use strict';
-        var nameLbl, startLbl, wKey;
+        var nameLbl, startLbl;
 
-        nameLbl = game.add.text(80, 160, 'WOOMP',
+        nameLbl = this.add.text(80, 160, 'WOOMP',
                                 {font: '50px Courier',
                                  fill: '#ffffff'});
-        startLbl = game.add.text(80, 240, 'press "W" to start',
+        startLbl = this.add.text(80, 240, 'press "W" to start',
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
 
-        wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-        wKey.onDown.addOnce(this.start, this);
+        this.input.keyboard.on('keydown_W', this.start, this);
     },
-    start: function() {
-        'use strict';
-        game.state.start('play');
+    update: () => {
+        console.log('[TITLE] update');
+    },
+    extend: {
+        start: function() {
+            'use strict';
+            console.log('[TITLE] start');
+            game.scene.switch('title', 'play');
+        }
     }
 };
 
-playState = {
+playScene = {
+    key: 'play',
     create: function() {
         'use strict';
         var block;
 
-        this.keyboard = game.input.keyboard;
+        // this.keyboard = game.input.keyboard;
 
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-
+        // game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // Walls
-        this.walls = game.add.group();
-        this.walls.enableBody = true;
+        // this.walls = game.add.group();
+        // this.walls.enableBody = true;
+        this.walls = this.physics.add.staticGroup();
 
-        block = this.walls.create(0, game.world.height - 32, 'platform');
-        block.scale.setTo(25, 1);
-        block.body.immovable = true;
+        block = this.walls.create(0, this.height - 32, 'platform');
+        block.setScale(25, 1).refreshBody();
+        // block.scale.setTo(25, 1);
+        // block.body.immovable = true;
 
         block = this.walls.create(0, 0, 'platform');
-        block.scale.setTo(25, 1);
-        block.body.immovable = true;
+        block.setScale(25, 1).refreshBody();
+        // block.scale.setTo(25, 1);
+        // block.body.immovable = true;
 
         block = this.walls.create(0, 32, 'platform');
-        block.scale.setTo(1, 17);
-        block.body.immovable = true;
+        block.setScale(1, 17).refreshBody();
+        // block.scale.setTo(1, 17);
+        // block.body.immovable = true;
 
-        block = this.walls.create(game.world.width - 32, 32, 'platform');
-        block.scale.setTo(1, 17);
-        block.body.immovable = true;
+        block = this.walls.create(this.width - 32, 32, 'platform');
+        block.setScale(1, 17).refreshBody();
+        // block.scale.setTo(1, 17);
+        // block.body.immovable = true;
 
         block = this.walls.create(200, 200, 'platform');
-        block.scale.setTo(8, 1);
-        block.body.immovable = true;
+        block.setScale(8, 1).refreshBody();
+        // block.scale.setTo(8, 1);
+        // block.body.immovable = true;
 
         block = this.walls.create(400, 400, 'platform');
-        block.scale.setTo(8, 1);
-        block.body.immovable = true;
+        block.setScale(8, 1).refreshBody();
+        // block.scale.setTo(8, 1);
+        // block.body.immovable = true;
 
         // Player
-        this.player = game.add.sprite(150, game.world.height - 150, 'player');
-        this.player.anchor.setTo(0.5, 0.5);
+        // this.player = this.add.sprite(150, game.world.height - 150, 'player');
+        // this.player.anchor.setTo(0.5, 0.5);
+        // this.player = this.physics.add.sprite(150, this.height - 150, 'player');
+        this.player = this.physics.add.sprite(150, 150, 'player');
         this.playerSpeed = 300;
 
-        game.physics.arcade.enable(this.player);
+        // game.physics.arcade.enable(this.player);
 
         // Enemies
-        this.enemies = game.add.group();
-        this.enemies.enableBody = true;
-        this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemies.setAll('outOfBoundsKill', true);
-        this.enemies.setAll('checkWorldBounds', true);
+        // this.enemies = game.add.group();
+        // this.enemies.enableBody = true;
+        // this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        // this.enemies.setAll('outOfBoundsKill', true);
+        // this.enemies.setAll('checkWorldBounds', true);
+        this.enemies = this.physics.add.group();
+        // this.enemies = this.physics.add.group({
+        //     key: 'star',
+        //     repeat: 11,
+        //     setXY: { x: 12, y: 0, stepX: 70 }
+        // });
+
         this.enemiesKilled = 0;
         this.enemySpeed = 80;
         this.createEnemies();
@@ -115,39 +166,71 @@ playState = {
         this.woompTimeOffset = 300;
 
         // Controls
-        this.cursors = game.input.keyboard.addKeys({
-            'up': Phaser.Keyboard.W,
-            'down': Phaser.Keyboard.S,
-            'left': Phaser.Keyboard.A,
-            'right': Phaser.Keyboard.D,
-            'woomp': Phaser.Keyboard.SPACEBAR
-        });
+        this.cursors = {};
+        this.cursors.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.cursors.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.cursors.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.cursors.woomp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACEBAR);
+
+        // this.cursors = game.input.keyboard.addKeys({
+        //     'up': Phaser.Keyboard.W,
+        //     'down': Phaser.Keyboard.S,
+        //     'left': Phaser.Keyboard.A,
+        //     'right': Phaser.Keyboard.D,
+        //     'woomp': Phaser.Keyboard.SPACEBAR
+        // });
+
+        this.physics.add.collider(this.player, this.walls);
+        this.physics.add.collider(this.enemies, this.walls);
+        this.physics.add.collider(this.enemies, this.enemies);
+        this.physics.add.overlap(this.player, this.enemies,
+                                 this.end, null, this);
 
     },
     update: function() {
         'use strict';
         var enemy, that;
 
-        game.physics.arcade.collide(this.player, this.walls);
-        game.physics.arcade.collide(this.enemies, this.walls);
-        game.physics.arcade.collide(this.enemies, this.enemies);
-        game.physics.arcade.overlap(this.player, this.enemies,
-                                    this.end, null, this);
+        // game.physics.arcade.collide(this.player, this.walls);
+        // game.physics.arcade.collide(this.enemies, this.walls);
+        // game.physics.arcade.collide(this.enemies, this.enemies);
+        // game.physics.arcade.overlap(this.player, this.enemies,
+        //                             this.end, null, this);
 
         // Update player.
-        this.player.body.velocity.x = 0;
-        this.player.body.velocity.y = 0;
+        // this.player.body.velocity.x = 0;
+        // this.player.body.velocity.y = 0;
+        // if (this.cursors.right.isDown) {
+        //     this.player.body.velocity.x = this.playerSpeed;
+        // }
+        // else if (this.cursors.left.isDown) {
+        //     this.player.body.velocity.x = -this.playerSpeed;
+        // }
+        // else if (this.cursors.up.isDown) {
+        //     this.player.body.velocity.y = -this.playerSpeed;
+        // }
+        // else if (this.cursors.down.isDown) {
+        //     this.player.body.velocity.y = this.playerSpeed;
+        // }
+
+        this.player.body.setVelocityX(0);
+        this.player.body.setVelocityY(0);
         if (this.cursors.right.isDown) {
-            this.player.body.velocity.x = this.playerSpeed;
+            console.log('RIGHT');
+            this.player.body.setVelocityX(this.playerSpeed);
         }
         else if (this.cursors.left.isDown) {
-            this.player.body.velocity.x = -this.playerSpeed;
+            console.log('LEFT');
+            this.player.body.setVelocityX(-this.playerSpeed);
         }
         else if (this.cursors.up.isDown) {
-            this.player.body.velocity.y = -this.playerSpeed;
+            console.log('UP');
+            this.player.body.setVelocityY(-this.playerSpeed);
         }
         else if (this.cursors.down.isDown) {
-            this.player.body.velocity.y = this.playerSpeed;
+            console.log('DOWN');
+            this.player.body.setVelocityY(this.playerSpeed);
         }
 
         if (this.cursors.woomp.isDown) {
@@ -157,101 +240,120 @@ playState = {
         // Update enemies.
         // Also could use this.enemies.children (array of objects).
         that = this;
-        this.enemies.forEach(function(enemy) {
-            if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
-                 Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
-                game.time.now > enemy.moveTime) {
-                enemy.body.velocity.x = 0;
-                enemy.body.velocity.y = 0;
-                switch(game.rnd.integerInRange(0, 3)) {
-                case 0:
-                    enemy.body.velocity.x = that.enemySpeed;
-                    break;
-                case 1:
-                    enemy.body.velocity.y = that.enemySpeed;
-                    break;
-                case 2:
-                    enemy.body.velocity.x = -that.enemySpeed;
-                    break;
-                case 3:
-                    enemy.body.velocity.y = -that.enemySpeed;
-                    break;
-                }
-                enemy.moveTime = game.time.now + game.rnd.integerInRange(5, 10)*200;
+        // this.enemies.forEach(function(enemy) {
+        //     if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
+        //          Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
+        //         game.time.now > enemy.moveTime) {
+        //         enemy.body.velocity.x = 0;
+        //         enemy.body.velocity.y = 0;
+        //         switch(game.rnd.integerInRange(0, 3)) {
+        //         case 0:
+        //             enemy.body.velocity.x = that.enemySpeed;
+        //             break;
+        //         case 1:
+        //             enemy.body.velocity.y = that.enemySpeed;
+        //             break;
+        //         case 2:
+        //             enemy.body.velocity.x = -that.enemySpeed;
+        //             break;
+        //         case 3:
+        //             enemy.body.velocity.y = -that.enemySpeed;
+        //             break;
+        //         }
+        //         enemy.moveTime = game.time.now + game.rnd.integerInRange(5, 10)*200;
+        //     }
+        // });
+
+    },
+    extend: {
+        woomp: function() {
+            'use strict';
+
+            if (game.time.now > this.woompTime) {
+                console.log('woomp');
+                this.woompTime = game.time.now + this.woompTimeOffset;
             }
-        })
+        },
+        createEnemies: function() {
+            'use strict';
+            var i, positions, pos, enemy;
 
-    },
-    woomp: function() {
-        'use strict';
+            console.log('createEnemies()');
 
-        if (game.time.now > this.woompTime) {
-            console.log('woomp');
-            this.woompTime = game.time.now + this.woompTimeOffset;
+            positions = [
+                [50, 50],
+                [150, 100],
+                [250, 50],
+                [350, 100]
+            ];
+            for (i=0; i<positions.length; i++) {
+                pos = positions[i];
+                enemy = this.enemies.create(pos[0], pos[1], 'enemy');
+                // enemy.anchor.setTo(0.5, 0.5);
+            }
+        },
+        die: function(player, enemy) {
+            'use strict';
+
+            console.log('die');
+
+            this.end();
+        },
+        end: function() {
+            'use strict';
+            console.log('[PLAY] end');
+            game.scene.switch('play', 'end')
         }
-    },
-    createEnemies: function() {
-        'use strict';
-        var i, positions, pos, enemy;
-
-        console.log('createEnemies()');
-
-        positions = [
-            [50, 50],
-            [150, 100],
-            [250, 50],
-            [350, 100]
-        ];
-        for (i=0; i<positions.length; i++) {
-            pos = positions[i];
-            enemy = this.enemies.create(pos[0], pos[1], 'enemy');
-            enemy.anchor.setTo(0.5, 0.5);
-        }
-    },
-    die: function(player, enemy) {
-        'use strict';
-
-        console.log('die');
-
-        this.end();
-    },
-    end: function() {
-        'use strict';
-        game.state.start('end');
     }
 };
 
-endState = {
+endScene = {
+    key: 'end',
     create: function() {
         'use strict';
-        var scoreLbl, nameLbl, startLbl, wKey;
+        var scoreLbl, nameLbl, startLbl;
 
-        scoreLbl = game.add.text(600, 10, 'Score: ' + score,
+        scoreLbl = this.add.text(600, 10, 'Score: ' + score,
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
-        nameLbl = game.add.text(80, 160, 'YOU DIED',
+        nameLbl = this.add.text(80, 160, 'YOU DIED',
                                 {font: '50px Courier',
                                  fill: '#ffffff'});
-        startLbl = game.add.text(80, 240, 'press "W" to restart',
+        startLbl = this.add.text(80, 240, 'press "W" to restart',
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
 
-        wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-        wKey.onDown.addOnce(this.restart, this);
+        this.input.keyboard.on('keydown_W', this.restart, this);
     },
-    restart: function() {
-        'use strict';
-        game.state.start('title');
+    extend: {
+        restart: function() {
+            'use strict';
+            game.scene.switch('end', 'title')
+        }
     }
 };
 
 
-game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-div');
+const gameConfig = {
+    type: Phaser.CANVAS,
+    parent: 'game-div',
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            debug: true,
+            // gravity: {
+            //     y: 600
+            // },
+            height: 775,
+            width: 1600,
+            x: 0,
+            y: -200
+        }
+    },
+    scene: [ bootScene, loadScene, titleScene, playScene, endScene ]
+};
 
-game.state.add('boot', bootState);
-game.state.add('load', loadState);
-game.state.add('title', titleState);
-game.state.add('play', playState);
-game.state.add('end', endState);
-
-game.state.start('boot');
+game = new Phaser.Game(gameConfig);
+game.scene.start('boot', { someData: '...arbitrary data' });
