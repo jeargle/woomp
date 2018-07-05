@@ -72,19 +72,19 @@ titleScene = {
         nameLbl = this.add.text(80, 160, 'WOOMP',
                                 {font: '50px Courier',
                                  fill: '#ffffff'});
-        startLbl = this.add.text(80, 240, 'press "W" to start',
+        startLbl = this.add.text(80, 240, 'press "E" to start',
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
 
-        this.input.keyboard.on('keydown_W', this.start, this);
+        this.input.keyboard.on('keydown_E', this.play, this);
     },
     update: () => {
         console.log('[TITLE] update');
     },
     extend: {
-        start: function() {
+        play: function() {
             'use strict';
-            console.log('[TITLE] start');
+            console.log('[TITLE] play');
             game.scene.switch('title', 'play');
         }
     }
@@ -94,53 +94,57 @@ playScene = {
     key: 'play',
     create: function() {
         'use strict';
-        var block;
+        var block, height, width;
+
+        console.log('[PLAY] create');
 
         // this.keyboard = game.input.keyboard;
 
-        // game.physics.startSystem(Phaser.Physics.ARCADE);
-
         // Walls
-        // this.walls = game.add.group();
-        // this.walls.enableBody = true;
         this.walls = this.physics.add.staticGroup();
 
-        block = this.walls.create(0, this.height - 32, 'platform');
-        block.setScale(25, 1).refreshBody();
-        // block.scale.setTo(25, 1);
-        // block.body.immovable = true;
 
-        block = this.walls.create(0, 0, 'platform');
-        block.setScale(25, 1).refreshBody();
-        // block.scale.setTo(25, 1);
-        // block.body.immovable = true;
+        // console.log(this.height);
+        // console.log(this.game.height);
+        height = 600;
+        width = 800;
+        block = this.walls.create(0, height - 32, 'platform')
+            .setOrigin(0, 0)
+            .setScale(25, 1)
+            .refreshBody();
 
-        block = this.walls.create(0, 32, 'platform');
-        block.setScale(1, 17).refreshBody();
-        // block.scale.setTo(1, 17);
-        // block.body.immovable = true;
+        block = this.walls.create(0, 0, 'platform')
+            .setOrigin(0, 0)
+            .setScale(25, 1)
+            .refreshBody();
 
-        block = this.walls.create(this.width - 32, 32, 'platform');
-        block.setScale(1, 17).refreshBody();
-        // block.scale.setTo(1, 17);
-        // block.body.immovable = true;
+        block = this.walls.create(0, 32, 'platform')
+            .setOrigin(0, 0)
+            .setScale(1, 17)
+            .refreshBody();
 
-        block = this.walls.create(200, 200, 'platform');
-        block.setScale(8, 1).refreshBody();
-        // block.scale.setTo(8, 1);
-        // block.body.immovable = true;
+        block = this.walls.create(width - 32, 32, 'platform')
+            .setOrigin(0, 0)
+            .setScale(1, 17)
+            .refreshBody();
 
-        block = this.walls.create(400, 400, 'platform');
-        block.setScale(8, 1).refreshBody();
-        // block.scale.setTo(8, 1);
-        // block.body.immovable = true;
+        block = this.walls.create(200, 200, 'platform')
+            .setOrigin(0, 0)
+            .setScale(8, 1)
+            .refreshBody();
+
+        block = this.walls.create(400, 400, 'platform')
+            .setOrigin(0, 0)
+            .setScale(8, 1)
+            .refreshBody();
 
         // Player
-        // this.player = this.add.sprite(150, game.world.height - 150, 'player');
-        // this.player.anchor.setTo(0.5, 0.5);
-        // this.player = this.physics.add.sprite(150, this.height - 150, 'player');
         this.player = this.physics.add.sprite(150, 150, 'player');
+        this.player.setBounce(0.2);
+        this.player.setCollideWorldBounds(true);
         this.playerSpeed = 300;
+
+        this.physics.add.collider(this.player, this.walls);
 
         // game.physics.arcade.enable(this.player);
 
@@ -181,7 +185,6 @@ playScene = {
         //     'woomp': Phaser.Keyboard.SPACEBAR
         // });
 
-        this.physics.add.collider(this.player, this.walls);
         this.physics.add.collider(this.enemies, this.walls);
         this.physics.add.collider(this.enemies, this.enemies);
         this.physics.add.overlap(this.player, this.enemies,
@@ -191,6 +194,8 @@ playScene = {
     update: function() {
         'use strict';
         var enemy, that;
+
+        // console.log('[PLAY] update');
 
         // game.physics.arcade.collide(this.player, this.walls);
         // game.physics.arcade.collide(this.enemies, this.walls);
@@ -335,21 +340,15 @@ endScene = {
 
 
 const gameConfig = {
-    type: Phaser.CANVAS,
+    // type: Phaser.CANVAS,
+    type: Phaser.AUTO,
     parent: 'game-div',
     width: 800,
     height: 600,
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
-            // gravity: {
-            //     y: 600
-            // },
-            height: 775,
-            width: 1600,
-            x: 0,
-            y: -200
+            debug: false
         }
     },
     scene: [ bootScene, loadScene, titleScene, playScene, endScene ]
