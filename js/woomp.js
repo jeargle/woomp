@@ -170,20 +170,13 @@ playScene = {
         this.woompTimeOffset = 300;
 
         // Controls
-        this.cursors = {};
-        this.cursors.up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.cursors.down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.cursors.left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.cursors.right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.cursors.woomp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACEBAR);
-
-        // this.cursors = game.input.keyboard.addKeys({
-        //     'up': Phaser.Keyboard.W,
-        //     'down': Phaser.Keyboard.S,
-        //     'left': Phaser.Keyboard.A,
-        //     'right': Phaser.Keyboard.D,
-        //     'woomp': Phaser.Keyboard.SPACEBAR
-        // });
+        this.cursors = this.input.keyboard.addKeys({
+            'up': Phaser.Input.Keyboard.KeyCodes.W,
+            'down': Phaser.Input.Keyboard.KeyCodes.S,
+            'left': Phaser.Input.Keyboard.KeyCodes.A,
+            'right': Phaser.Input.Keyboard.KeyCodes.D,
+            'woomp': Phaser.Input.Keyboard.KeyCodes.SPACEBAR
+        });
 
         this.physics.add.collider(this.enemies, this.walls);
         this.physics.add.collider(this.enemies, this.enemies);
@@ -197,28 +190,7 @@ playScene = {
 
         // console.log('[PLAY] update');
 
-        // game.physics.arcade.collide(this.player, this.walls);
-        // game.physics.arcade.collide(this.enemies, this.walls);
-        // game.physics.arcade.collide(this.enemies, this.enemies);
-        // game.physics.arcade.overlap(this.player, this.enemies,
-        //                             this.end, null, this);
-
         // Update player.
-        // this.player.body.velocity.x = 0;
-        // this.player.body.velocity.y = 0;
-        // if (this.cursors.right.isDown) {
-        //     this.player.body.velocity.x = this.playerSpeed;
-        // }
-        // else if (this.cursors.left.isDown) {
-        //     this.player.body.velocity.x = -this.playerSpeed;
-        // }
-        // else if (this.cursors.up.isDown) {
-        //     this.player.body.velocity.y = -this.playerSpeed;
-        // }
-        // else if (this.cursors.down.isDown) {
-        //     this.player.body.velocity.y = this.playerSpeed;
-        // }
-
         this.player.body.setVelocityX(0);
         this.player.body.setVelocityY(0);
         if (this.cursors.right.isDown) {
@@ -307,7 +279,13 @@ playScene = {
         end: function() {
             'use strict';
             console.log('[PLAY] end');
+            this.scene.restart();
             game.scene.switch('play', 'end')
+            this.cursors.right.isDown = false;
+            this.cursors.left.isDown = false;
+            this.cursors.up.isDown = false;
+            this.cursors.down.isDown = false;
+            console.log('CURSORS OFF');
         }
     }
 };
