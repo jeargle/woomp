@@ -98,14 +98,9 @@ playScene = {
 
         console.log('[PLAY] create');
 
-        // this.keyboard = game.input.keyboard;
-
         // Walls
         this.walls = this.physics.add.staticGroup();
 
-
-        // console.log(this.height);
-        // console.log(this.game.height);
         height = 600;
         width = 800;
         block = this.walls.create(0, height - 32, 'platform')
@@ -145,8 +140,6 @@ playScene = {
         this.playerSpeed = 300;
 
         this.physics.add.collider(this.player, this.walls);
-
-        // game.physics.arcade.enable(this.player);
 
         // Enemies
         // this.enemies = game.add.group();
@@ -266,7 +259,6 @@ playScene = {
             for (i=0; i<positions.length; i++) {
                 pos = positions[i];
                 enemy = this.enemies.create(pos[0], pos[1], 'enemy');
-                // enemy.anchor.setTo(0.5, 0.5);
             }
         },
         die: function(player, enemy) {
