@@ -142,18 +142,7 @@ playScene = {
         this.physics.add.collider(this.player, this.walls);
 
         // Enemies
-        // this.enemies = game.add.group();
-        // this.enemies.enableBody = true;
-        // this.enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        // this.enemies.setAll('outOfBoundsKill', true);
-        // this.enemies.setAll('checkWorldBounds', true);
         this.enemies = this.physics.add.group();
-        // this.enemies = this.physics.add.group({
-        //     key: 'star',
-        //     repeat: 11,
-        //     setXY: { x: 12, y: 0, stepX: 70 }
-        // });
-
         this.enemiesKilled = 0;
         this.enemySpeed = 80;
         this.createEnemies();
@@ -179,7 +168,7 @@ playScene = {
     },
     update: function() {
         'use strict';
-        var enemy, that;
+        var enemy, that, now;
 
         // console.log('[PLAY] update');
 
@@ -210,38 +199,41 @@ playScene = {
         // Update enemies.
         // Also could use this.enemies.children (array of objects).
         that = this;
-        // this.enemies.forEach(function(enemy) {
-        //     if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
-        //          Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
-        //         game.time.now > enemy.moveTime) {
-        //         enemy.body.velocity.x = 0;
-        //         enemy.body.velocity.y = 0;
-        //         switch(game.rnd.integerInRange(0, 3)) {
-        //         case 0:
-        //             enemy.body.velocity.x = that.enemySpeed;
-        //             break;
-        //         case 1:
-        //             enemy.body.velocity.y = that.enemySpeed;
-        //             break;
-        //         case 2:
-        //             enemy.body.velocity.x = -that.enemySpeed;
-        //             break;
-        //         case 3:
-        //             enemy.body.velocity.y = -that.enemySpeed;
-        //             break;
-        //         }
-        //         enemy.moveTime = game.time.now + game.rnd.integerInRange(5, 10)*200;
-        //     }
-        // });
-
+        this.enemies.children.iterate(function(enemy) {
+            now = that.time.now;
+            if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
+                 Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
+                now > enemy.moveTime) {
+                enemy.body.velocity.x = 0;
+                enemy.body.velocity.y = 0;
+                switch(Phaser.Math.RND.integerInRange(0, 3)) {
+                case 0:
+                    enemy.body.velocity.x = that.enemySpeed;
+                    break;
+                case 1:
+                    enemy.body.velocity.y = that.enemySpeed;
+                    break;
+                case 2:
+                    enemy.body.velocity.x = -that.enemySpeed;
+                    break;
+                case 3:
+                    enemy.body.velocity.y = -that.enemySpeed;
+                    break;
+                }
+                enemy.moveTime = now + Phaser.Math.RND.integerInRange(5, 10)*200;
+            }
+        });
     },
     extend: {
         woomp: function() {
             'use strict';
+            var now;
 
-            if (game.time.now > this.woompTime) {
+            now = this.time.now;
+
+            if (now > this.woompTime) {
                 console.log('woomp');
-                this.woompTime = game.time.now + this.woompTimeOffset;
+                this.woompTime = now + this.woompTimeOffset;
             }
         },
         createEnemies: function() {
