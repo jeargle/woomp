@@ -76,7 +76,7 @@ titleScene = {
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
 
-        this.input.keyboard.on('keydown_E', this.play, this);
+        this.input.keyboard.on('keydown-E', this.play, this);
     },
     update: () => {
         console.log('[TITLE] update');
@@ -290,7 +290,7 @@ endScene = {
                                  {font: '30px Courier',
                                   fill: '#ffffff'});
 
-        this.input.keyboard.on('keydown_W', this.restart, this);
+        this.input.keyboard.on('keydown-W', this.restart, this);
     },
     extend: {
         restart: function() {
