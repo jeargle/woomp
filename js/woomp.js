@@ -1,4 +1,4 @@
-var score, bootScene, loadScene, titleScene, playScene, endScene, game
+let score, bootScene, loadScene, titleScene, playScene, endScene, game
 
 score = 0
 
@@ -34,11 +34,10 @@ loadScene = {
     },
     preload: function() {
         'use strict'
-        var loadLbl
 
-        loadLbl = this.add.text(80, 160, 'loading...',
-                                {font: '30px Courier',
-                                 fill: '#ffffff'})
+        this.add.text(80, 160, 'loading...',
+                      {font: '30px Courier',
+                       fill: '#ffffff'})
 
         // Load images
         this.load.image('player', 'assets/circle-blue.png')
@@ -67,14 +66,13 @@ titleScene = {
     },
     create: function() {
         'use strict'
-        var nameLbl, startLbl
 
-        nameLbl = this.add.text(80, 160, 'WOOMP',
-                                {font: '50px Courier',
-                                 fill: '#ffffff'})
-        startLbl = this.add.text(80, 240, 'press "E" to start',
-                                 {font: '30px Courier',
-                                  fill: '#ffffff'})
+        this.add.text(80, 160, 'WOOMP',
+                      {font: '50px Courier',
+                       fill: '#ffffff'})
+        this.add.text(80, 240, 'press "E" to start',
+                      {font: '30px Courier',
+                       fill: '#ffffff'})
 
         this.input.keyboard.on('keydown-E', this.play, this)
     },
@@ -94,16 +92,15 @@ playScene = {
     key: 'play',
     create: function() {
         'use strict'
-        var block, height, width
 
         console.log('[PLAY] create')
 
         // Walls
         this.walls = this.physics.add.staticGroup()
 
-        height = 600
-        width = 800
-        block = this.walls.create(0, height - 32, 'platform')
+        let height = 600
+        let width = 800
+        let block = this.walls.create(0, height - 32, 'platform')
             .setOrigin(0, 0)
             .setScale(25, 1)
             .refreshBody()
@@ -168,7 +165,7 @@ playScene = {
     },
     update: function() {
         'use strict'
-        var enemy, that, now
+        let enemy, that, now
 
         // console.log('[PLAY] update')
 
@@ -227,9 +224,7 @@ playScene = {
     extend: {
         woomp: function() {
             'use strict'
-            var now
-
-            now = this.time.now
+            let now = this.time.now
 
             if (now > this.woompTime) {
                 console.log('woomp')
@@ -238,19 +233,18 @@ playScene = {
         },
         createEnemies: function() {
             'use strict'
-            var i, positions, pos, enemy
 
             console.log('createEnemies()')
 
-            positions = [
+            let positions = [
                 [50, 50],
                 [150, 100],
                 [250, 50],
                 [350, 100]
             ]
-            for (i=0; i<positions.length; i++) {
-                pos = positions[i]
-                enemy = this.enemies.create(pos[0], pos[1], 'enemy')
+            for (let i=0; i<positions.length; i++) {
+                let pos = positions[i]
+                let enemy = this.enemies.create(pos[0], pos[1], 'enemy')
             }
         },
         die: function(player, enemy) {
@@ -280,26 +274,23 @@ endScene = {
     key: 'end',
     create: function() {
         'use strict'
-        var scoreLbl, nameLbl, startLbl
 
         console.log('[END] create')
 
-        scoreLbl = this.add.text(600, 10, 'Score: ' + score,
-                                 {font: '30px Courier',
-                                  fill: '#ffffff'})
-        nameLbl = this.add.text(80, 160, 'YOU DIED',
-                                {font: '50px Courier',
-                                 fill: '#ffffff'})
-        startLbl = this.add.text(80, 240, 'press "W" to restart',
-                                 {font: '30px Courier',
-                                  fill: '#ffffff'})
+        this.add.text(600, 10, 'Score: ' + score,
+                      {font: '30px Courier',
+                       fill: '#ffffff'})
+        this.add.text(80, 160, 'YOU DIED',
+                      {font: '50px Courier',
+                       fill: '#ffffff'})
+        this.add.text(80, 240, 'press "W" to restart',
+                      {font: '30px Courier',
+                       fill: '#ffffff'})
 
         this.input.keyboard.on('keydown-W', this.restart, this)
     },
     // update: function() {
     //     'use strict'
-    //     var enemy, that, now
-
     //     console.log('[END] update')
     // },
     extend: {
