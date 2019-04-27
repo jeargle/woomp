@@ -2,37 +2,49 @@ let score, bootScene, loadScene, titleScene, playScene, endScene, game
 
 score = 0
 
-bootScene = {
-    key: 'boot',
-    active: true,
-    init: (config) => {
+class BootScene extends Phaser.Scene {
+    // key: 'boot',
+    // active: true,
+    constructor() {
+        super('boot')
+    }
+
+    init(config) {
         console.log('[BOOT] init', config)
-    },
-    preload: () => {
+    }
+
+    preload() {
         console.log('[BOOT] preload')
-    },
-    create: function() {
+    }
+
+    create() {
         'use strict'
 
         game.scene.start('load')
         game.scene.remove('boot')
-    },
-    update: () => {
+    }
+
+    update() {
         console.log('[BOOT] update')
     }
 }
 
-loadScene = {
-    key: 'load',
-    renderToTexture: true,
-    x: 64,
-    y: 64,
-    width: 320,
-    height: 200,
-    init: (config) => {
+class LoadScene extends Phaser.Scene {
+    // key: 'load',
+    // renderToTexture: true,
+    // x: 64,
+    // y: 64,
+    // width: 320,
+    // height: 200,
+    constructor() {
+        super('load')
+    }
+
+    init(config) {
         console.log('[LOAD] init', config)
-    },
-    preload: function() {
+    }
+
+    preload() {
         'use strict'
 
         this.add.text(80, 160, 'loading...',
@@ -45,26 +57,33 @@ loadScene = {
         this.load.image('platform', 'assets/square-green.png')
 
         // Load sound effects
-    },
-    create: function() {
+    }
+
+    create() {
         'use strict'
         game.scene.start('title')
         game.scene.remove('load')
-    },
-    update: () => {
+    }
+
+    update() {
         console.log('[LOAD] update')
     }
 }
 
-titleScene = {
-    key: 'title',
-    init: (config) => {
+class TitleScene extends Phaser.Scene {
+    constructor() {
+        super('title')
+    }
+
+    init(config) {
         console.log('[TITLE] init', config)
-    },
-    preload: () => {
+    }
+
+    preload() {
         console.log('[TITLE] preload')
-    },
-    create: function() {
+    }
+
+    create() {
         'use strict'
 
         this.add.text(80, 160, 'WOOMP',
@@ -75,22 +94,26 @@ titleScene = {
                        fill: '#ffffff'})
 
         this.input.keyboard.on('keydown-E', this.play, this)
-    },
-    update: () => {
+    }
+
+    update() {
         console.log('[TITLE] update')
-    },
-    extend: {
-        play: function() {
-            'use strict'
-            console.log('[TITLE] play')
-            game.scene.switch('title', 'play')
-        }
+    }
+
+    play() {
+        'use strict'
+        console.log('[TITLE] play')
+        game.scene.switch('title', 'play')
     }
 }
 
-playScene = {
-    key: 'play',
-    create: function() {
+class PlayScene extends Phaser.Scene {
+    // key: 'play',
+    constructor() {
+        super('play')
+    }
+
+    create() {
         'use strict'
 
         console.log('[PLAY] create')
@@ -162,8 +185,9 @@ playScene = {
         this.physics.add.overlap(this.player, this.enemies,
                                  this.end, null, this)
 
-    },
-    update: function() {
+    }
+
+    update() {
         'use strict'
         let enemy, that, now
 
@@ -220,59 +244,64 @@ playScene = {
                 enemy.moveTime = now + Phaser.Math.RND.integerInRange(5, 10)*200
             }
         })
-    },
-    extend: {
-        woomp: function() {
-            'use strict'
-            let now = this.time.now
+    }
 
-            if (now > this.woompTime) {
-                console.log('woomp')
-                this.woompTime = now + this.woompTimeOffset
-            }
-        },
-        createEnemies: function() {
-            'use strict'
+    woomp() {
+        'use strict'
+        let now = this.time.now
 
-            console.log('createEnemies()')
-
-            let positions = [
-                [50, 50],
-                [150, 100],
-                [250, 50],
-                [350, 100]
-            ]
-            for (let i=0; i<positions.length; i++) {
-                let pos = positions[i]
-                let enemy = this.enemies.create(pos[0], pos[1], 'enemy')
-            }
-        },
-        die: function(player, enemy) {
-            'use strict'
-
-            console.log('die')
-
-            this.end()
-        },
-        end: function() {
-            'use strict'
-            console.log('[PLAY] end')
-            this.registry.destroy()
-            this.events.off()
-            game.scene.switch('play', 'end')
-            this.cursors.right.isDown = false
-            this.cursors.left.isDown = false
-            this.cursors.up.isDown = false
-            this.cursors.down.isDown = false
-            console.log('[PLAY] CURSORS OFF')
-            this.scene.stop()
+        if (now > this.woompTime) {
+            console.log('woomp')
+            this.woompTime = now + this.woompTimeOffset
         }
+    }
+
+    createEnemies() {
+        'use strict'
+
+        console.log('createEnemies()')
+
+        let positions = [
+            [50, 50],
+            [150, 100],
+            [250, 50],
+            [350, 100]
+        ]
+        for (let i=0; i<positions.length; i++) {
+            let pos = positions[i]
+            let enemy = this.enemies.create(pos[0], pos[1], 'enemy')
+        }
+    }
+
+    die(player, enemy) {
+        'use strict'
+
+        console.log('die')
+
+        this.end()
+    }
+
+    end() {
+        'use strict'
+        console.log('[PLAY] end')
+        this.registry.destroy()
+        this.events.off()
+        game.scene.switch('play', 'end')
+        this.cursors.right.isDown = false
+        this.cursors.left.isDown = false
+        this.cursors.up.isDown = false
+        this.cursors.down.isDown = false
+        console.log('[PLAY] CURSORS OFF')
+        this.scene.stop()
     }
 }
 
-endScene = {
-    key: 'end',
-    create: function() {
+class EndScene extends Phaser.Scene {
+    constructor() {
+        super('end')
+    }
+
+    create() {
         'use strict'
 
         console.log('[END] create')
@@ -288,17 +317,12 @@ endScene = {
                        fill: '#ffffff'})
 
         this.input.keyboard.on('keydown-W', this.restart, this)
-    },
-    // update: function() {
-    //     'use strict'
-    //     console.log('[END] update')
-    // },
-    extend: {
-        restart: function() {
-            'use strict'
-            console.log('[END] restart')
-            game.scene.switch('end', 'title')
-        }
+    }
+
+    restart() {
+        'use strict'
+        console.log('[END] restart')
+        game.scene.switch('end', 'title')
     }
 }
 
@@ -315,7 +339,13 @@ const gameConfig = {
             debug: false
         }
     },
-    scene: [ bootScene, loadScene, titleScene, playScene, endScene ]
+    scene: [
+        BootScene,
+        LoadScene,
+        TitleScene,
+        PlayScene,
+        EndScene
+    ]
 }
 
 game = new Phaser.Game(gameConfig)
