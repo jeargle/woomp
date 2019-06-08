@@ -1,4 +1,4 @@
-let score, bootScene, loadScene, titleScene, playScene, endScene, game
+let score, game
 
 score = 0
 
@@ -18,8 +18,6 @@ class BootScene extends Phaser.Scene {
     }
 
     create() {
-        'use strict'
-
         game.scene.start('load')
         game.scene.remove('boot')
     }
@@ -45,8 +43,6 @@ class LoadScene extends Phaser.Scene {
     }
 
     preload() {
-        'use strict'
-
         this.add.text(80, 160, 'loading...',
                       {font: '30px Courier',
                        fill: '#ffffff'})
@@ -60,7 +56,6 @@ class LoadScene extends Phaser.Scene {
     }
 
     create() {
-        'use strict'
         game.scene.start('title')
         game.scene.remove('load')
     }
@@ -84,8 +79,6 @@ class TitleScene extends Phaser.Scene {
     }
 
     create() {
-        'use strict'
-
         this.add.text(80, 160, 'WOOMP',
                       {font: '50px Courier',
                        fill: '#ffffff'})
@@ -101,7 +94,6 @@ class TitleScene extends Phaser.Scene {
     }
 
     play() {
-        'use strict'
         console.log('[TITLE] play')
         game.scene.switch('title', 'play')
     }
@@ -114,8 +106,6 @@ class PlayScene extends Phaser.Scene {
     }
 
     create() {
-        'use strict'
-
         console.log('[PLAY] create')
 
         // Walls
@@ -188,7 +178,6 @@ class PlayScene extends Phaser.Scene {
     }
 
     update() {
-        'use strict'
         let enemy, that, now
 
         // console.log('[PLAY] update')
@@ -247,7 +236,6 @@ class PlayScene extends Phaser.Scene {
     }
 
     woomp() {
-        'use strict'
         let now = this.time.now
 
         if (now > this.woompTime) {
@@ -257,8 +245,6 @@ class PlayScene extends Phaser.Scene {
     }
 
     createEnemies() {
-        'use strict'
-
         console.log('createEnemies()')
 
         let positions = [
@@ -274,15 +260,12 @@ class PlayScene extends Phaser.Scene {
     }
 
     die(player, enemy) {
-        'use strict'
-
         console.log('die')
 
         this.end()
     }
 
     end() {
-        'use strict'
         console.log('[PLAY] end')
         this.registry.destroy()
         this.events.off()
@@ -302,8 +285,6 @@ class EndScene extends Phaser.Scene {
     }
 
     create() {
-        'use strict'
-
         console.log('[END] create')
 
         this.add.text(600, 10, 'Score: ' + score,
@@ -320,7 +301,6 @@ class EndScene extends Phaser.Scene {
     }
 
     restart() {
-        'use strict'
         console.log('[END] restart')
         game.scene.switch('end', 'title')
     }
