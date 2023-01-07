@@ -2,6 +2,16 @@
 there it is
 
 
+Controls
+--------
+
+* W - move up
+* A - move left
+* S - move down
+* D - move right
+* SPACE - woomp
+
+
 How to Run
 ----------
 
