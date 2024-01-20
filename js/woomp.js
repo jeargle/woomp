@@ -211,23 +211,26 @@ class PlayScene extends Phaser.Scene {
         that = this
         this.enemies.children.iterate(function(enemy) {
             now = that.time.now
-            if ((Math.abs(enemy.body.velocity.x) < that.enemySpeed &&
-                 Math.abs(enemy.body.velocity.y) < that.enemySpeed) ||
+            const absVelX = Math.abs(enemy.body.velocity.x)
+            const absVelY = Math.abs(enemy.body.velocity.y)
+            if ((absVelX < that.enemySpeed &&
+                 absVelY < that.enemySpeed) ||
+                (absVelX > 0 && absVelY > 0) ||
                 now > enemy.moveTime) {
-                enemy.body.velocity.x = 0
-                enemy.body.velocity.y = 0
+                enemy.body.setVelocityX(0)
+                enemy.body.setVelocityY(0)
                 switch(Phaser.Math.RND.integerInRange(0, 3)) {
                 case 0:
-                    enemy.body.velocity.x = that.enemySpeed
+                    enemy.body.setVelocityX(that.enemySpeed)
                     break
                 case 1:
-                    enemy.body.velocity.y = that.enemySpeed
+                    enemy.body.setVelocityY(that.enemySpeed)
                     break
                 case 2:
-                    enemy.body.velocity.x = -that.enemySpeed
+                    enemy.body.setVelocityX(-that.enemySpeed)
                     break
                 case 3:
-                    enemy.body.velocity.y = -that.enemySpeed
+                    enemy.body.setVelocityY(-that.enemySpeed)
                     break
                 }
                 enemy.moveTime = now + Phaser.Math.RND.integerInRange(5, 10)*200
