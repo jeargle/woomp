@@ -3,8 +3,6 @@ let score, game
 score = 0
 
 class BootScene extends Phaser.Scene {
-    // key: 'boot',
-    // active: true,
     constructor() {
         super('boot')
     }
@@ -28,12 +26,6 @@ class BootScene extends Phaser.Scene {
 }
 
 class LoadScene extends Phaser.Scene {
-    // key: 'load',
-    // renderToTexture: true,
-    // x: 64,
-    // y: 64,
-    // width: 320,
-    // height: 200,
     constructor() {
         super('load')
     }
@@ -100,7 +92,6 @@ class TitleScene extends Phaser.Scene {
 }
 
 class PlayScene extends Phaser.Scene {
-    // key: 'play',
     constructor() {
         super('play')
     }
@@ -111,8 +102,8 @@ class PlayScene extends Phaser.Scene {
         // Walls
         this.walls = this.physics.add.staticGroup()
 
-        let height = 600
-        let width = 800
+        const height = 600
+        const width = 800
         let block = this.walls.create(0, height - 32, 'platform')
             .setOrigin(0, 0)
             .setScale(25, 1)
@@ -167,7 +158,7 @@ class PlayScene extends Phaser.Scene {
             'down': Phaser.Input.Keyboard.KeyCodes.S,
             'left': Phaser.Input.Keyboard.KeyCodes.A,
             'right': Phaser.Input.Keyboard.KeyCodes.D,
-            'woomp': Phaser.Input.Keyboard.KeyCodes.SPACEBAR
+            'woomp': Phaser.Input.Keyboard.KeyCodes.SPACE
         })
 
         this.physics.add.collider(this.enemies, this.walls)
@@ -239,7 +230,7 @@ class PlayScene extends Phaser.Scene {
     }
 
     woomp() {
-        let now = this.time.now
+        const now = this.time.now
 
         if (now > this.woompTime) {
             console.log('woomp')
@@ -250,15 +241,14 @@ class PlayScene extends Phaser.Scene {
     createEnemies() {
         console.log('createEnemies()')
 
-        let positions = [
+        const positions = [
             [50, 50],
             [150, 100],
             [250, 50],
             [350, 100]
         ]
-        for (let i=0; i<positions.length; i++) {
-            let pos = positions[i]
-            let enemy = this.enemies.create(pos[0], pos[1], 'enemy')
+        for (let pos of positions) {
+            this.enemies.create(pos[0], pos[1], 'enemy')
         }
     }
 
