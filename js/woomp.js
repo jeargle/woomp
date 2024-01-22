@@ -45,6 +45,8 @@ class LoadScene extends Phaser.Scene {
         this.load.image('platform', 'assets/square-green.png')
 
         // Load sound effects
+        this.load.audio('woomp1', 'assets/woomp1.wav')
+        this.load.audio('woomp2', 'assets/woomp2.wav')
     }
 
     create() {
@@ -140,6 +142,9 @@ class PlayScene extends Phaser.Scene {
         this.player.setCollideWorldBounds(true)
         this.playerSpeed = 300
 
+        this.sound.add('woomp1')
+        this.sound.add('woomp2')
+
         this.physics.add.collider(this.player, this.walls)
 
         // Enemies
@@ -231,6 +236,15 @@ class PlayScene extends Phaser.Scene {
 
     woomp() {
         const now = this.time.now
+
+        switch(Phaser.Math.RND.integerInRange(0, 1)) {
+        case 0:
+            this.sound.play('woomp1')
+            break
+        case 1:
+            this.sound.play('woomp2')
+            break
+        }
 
         if (now > this.woompTime) {
             console.log('woomp')
