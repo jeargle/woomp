@@ -237,17 +237,18 @@ class PlayScene extends Phaser.Scene {
     woomp() {
         const now = this.time.now
 
-        switch(Phaser.Math.RND.integerInRange(0, 1)) {
-        case 0:
-            this.sound.play('woomp1')
-            break
-        case 1:
-            this.sound.play('woomp2')
-            break
-        }
-
         if (now > this.woompTime) {
-            console.log('woomp')
+            switch(Phaser.Math.RND.integerInRange(0, 1)) {
+            case 0:
+                console.log('woomp1')
+                this.sound.play('woomp1', {volume: 0.5})
+                break
+            case 1:
+                console.log('woomp2')
+                this.sound.play('woomp2', {volume: 0.5})
+                break
+            }
+
             this.woompTime = now + this.woompTimeOffset
         }
     }
