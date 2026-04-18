@@ -205,7 +205,7 @@ class PlayScene extends Phaser.Scene {
         // Update enemies.
         // Also could use this.enemies.children (array of objects).
         that = this
-        this.enemies.children.iterate(function(enemy) {
+        this.enemies.children.forEach(function(enemy) {
             now = that.time.now
             const absVelX = Math.abs(enemy.body.velocity.x)
             const absVelY = Math.abs(enemy.body.velocity.y)
